@@ -23,8 +23,8 @@
       <div class="container-fluid">
         <a class="navbar-brand d-flex flex-column align-items-center" href="#">
           <img src="img/logo.png" alt="Logo" width="80" height="60" class="me-2"> </a>
-          <div class="text-center">
-            <span class="fs-1 app_title">Allops</span><br>
+          <div class="text-center" style="margin-right: 200px;">
+            <span class="fs-1 app_title" >Allops</span><br>
             <span class="fs-6" style="color: #E76F51;margin-right: 500px;"><i>We build to serve you</i></span>
           </div>
        
