@@ -16,7 +16,7 @@ if ($_REQUEST['btn_search'] == 'Search') {
 <body>
       <!-- Optional content below header -->
   <div class="container mt-5 text-center">
-    <h1>Step In, Gear Up, Drive On — Welcome to Allops.</h1>
+    <h1>Step In, Gear Up, Drive On — Welcome to Allops Automative Services.</h1>
     <p style="color:#E76F51;font-weight:bold"><i>Crafted for comfort, created for you.</i></p>
   </div>
 <div class="container mt-5">
@@ -42,7 +42,7 @@ if ($_REQUEST['btn_search'] == 'Search') {
       </div>
       <div class="col-md-4 mb-4">
         <img src="img/car.jpg" alt="Luxury Ride" class="feature-img" style="height:256px">
-        <div class="image-caption">From Sedans to SUVs—200+ Vehicles Ready to Roll!</div>
+        <div class="image-caption">From Sedans to SUVs Vehicles Ready to Roll!</div>
       </div>
     </div>
   </div>

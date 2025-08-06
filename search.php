@@ -1,11 +1,13 @@
 <?php
+error_reporting(0);
+
 require_once('includes/header.php');
 
 ?>
 
 <head>
   <meta charset="UTF-8">
-  <title>Journey Planner - Allops</title>
+  <title>Journey Planner - Allops Automative Services</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>

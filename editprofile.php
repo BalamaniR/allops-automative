@@ -5,7 +5,7 @@ require_once('includes/header.php');
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Profile - Allops Rental</title>
+  <title>My Profile - Allops Automative Services</title>
    <link href="css/style.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <style>

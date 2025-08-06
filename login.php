@@ -1,26 +1,55 @@
 <?php 
+error_reporting(0);
+session_start(); // Start the session
 require_once('includes/header.php');
+require_once('classes/functions.php');
+if (isset($_REQUEST['btn_login'])) {
+
+      $email = filter_var($_REQUEST['txt_email'], FILTER_VALIDATE_EMAIL);
+      $pass = $_REQUEST['txt_pwd'];
+      $_SESSION['user_email'] = $email;
+      $validate = $obj->validate_user_password( $email, $pass);
+      if($validate == 1){
+        $flagVal = $obj->get_pwd_change_flag($email);
+
+        $flag = $flagVal['user_pwd_update'];
+
+       if($flag!= 1){
+          header("Location: changepassword.php");
+          exit();
+       }else{
+         header("Location: search.php");
+          exit();
+       }
+
+       
+      }else{
+            echo '<div class="alert alert-danger">Login failed. Please check your  email and password is correct.</div>';
+
+      }
+     
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login to Allops Automative</title>
+  <title>Login to Allops Automative Services</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
   <div class="login-container text-center">
-    <h2 class="mb-4">Login to Allops Automative</h2>
+    <h2 class="mb-4">Login to Allops Automative Services</h2>
     <form>
   <div class="mb-3 text-start">
     <label for="email" class="form-label">Email address</label>
-    <input type="email" class="form-control" id="email" placeholder="Enter email">
+    <input type="email" class="form-control" id="email" name="txt_email" placeholder="Enter email">
   </div>
   <div class="mb-3 text-start">
     <label for="password" class="form-label">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="Password">
+    <input type="password" class="form-control" id="password" name="txt_pwd" placeholder="Password">
   </div>
   
   <div class="d-flex justify-content-between mb-3">
@@ -28,7 +57,7 @@ require_once('includes/header.php');
     <a href="signup.php" class="text-decoration-none pgLink"><i>New User? Register</i></a>
   </div>
 
-  <button type="submit" class="btn btn-custom btn-block w-100">Login</button>
+  <button type="submit" name="btn_login" class="btn btn-custom btn-block w-100">Login</button>
 </form>
   </div>
 </body>
