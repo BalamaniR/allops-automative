@@ -9,6 +9,8 @@ session_start();
   <title>Allops</title>
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
   <style>
     .app_title{
      margin-right: 500px;
@@ -41,21 +43,23 @@ session_start();
           </li>
         <?php } else { ?>
           <li class="nav-item d-flex align-items-center">
-            <span class="me-2">Welcome, <?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
+            <span class="me-2">Welcome, <?php echo $_SESSION['user_name']; ?></span>
             <a class="nav-link" href="logout.php">Logout</a>
           </li>
         <?php } ?>
       </ul>
     </div>
-  </div>
+  </div>  
+  <?php if (!empty($_SESSION['user_email'])) { ?>
   <button class="btn border ms-2" id="menuToggle">
     <i class="bi bi-list fs-3"></i> <!-- Bootstrap Icons -->
   </button>
+  <?php }?>
 </nav>
 <?php if (!empty($_SESSION['user_email'])): ?>
 <div class="position-relative">
  <div id="customMenu" class="position-absolute top-100 end-0 bg-light border rounded shadow"
-     style="display: block; z-index: 1050; width: 220px; padding: 15px;">
+     style="display: none; z-index: 1050; width: 220px; padding: 15px;">
   <ul class="list-unstyled mb-0">
     <li><a href="myprofile.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-person-circle"> Profile</a></li>
     <li><a href="search.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-car-front-fill"> Book Ride</a></li>
@@ -71,16 +75,14 @@ session_start();
   <!-- Bootstrap JS -->
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
-  <script>
-
-  document.addEventListener('DOMContentLoaded', function () {
-    console.log(document.getElementById('customMenu')); // Should not be null
+<script>
+document.addEventListener('DOMContentLoaded', function () {
   const toggle = document.getElementById('menuToggle');
   const menu = document.getElementById('customMenu');
 
   if (toggle && menu) {
     toggle.addEventListener('click', function (e) {
-      e.stopPropagation(); // Prevent triggering document click
+      e.stopPropagation();
       menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
     });
 

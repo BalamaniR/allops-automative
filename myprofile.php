@@ -2,9 +2,10 @@
 error_reporting(0);
 require_once('includes/header.php');
 require_once('classes/functions.php');
- echo "----".$email= $_SESSION['user_email'];
+ $email= $_SESSION['user_email'];
 
  $result = $obj->get_user_details($email);
+$profilePhotoPath=htmlspecialchars($result['profile_photo']);
 
 ?>
 <!DOCTYPE html>
@@ -28,9 +29,9 @@ require_once('classes/functions.php');
 
   <div class="container mt-5">
     <div class="profile-card text-center">
-      <img src="img/profilepic.jpg" alt="Profile Photo" class="rounded-circle mb-3" width="100">
+      <img src="<?php echo $profilePhotoPath; ?>" alt="Profile Photo" class="rounded-circle mb-3" width="100">
       <h4 class="fw-bold" style="color: #E76F51!important;font-weight:bold"><?php echo  $result['user_name']; ?></h4>
-      <p class="text-muted"><b><i>Customer ID: ALLOPS-43125</i></b></p>
+      <p class="text-muted"><b><i>Customer ID: <?php echo  $result['customer_id']; ?></i></b></p>
 
       <hr>
 
@@ -41,7 +42,9 @@ require_once('classes/functions.php');
         <p><i class="bi bi-geo-alt-fill me-2"></i><strong>Address:</strong> <?php echo  $result['user_address']; ?></p>
         <p><i class="bi bi-calendar-fill me-2"></i><strong>Date of Birth:</strong> <?php echo  $result['user_dob']; ?></p>
         <p><i class="bi bi-card-text me-2"></i><strong>License No:</strong><?php echo  $result['user_driver_license_number']; ?></p>
-        <p><i class="bi bi-calendar-check-fill me-2"></i><strong>License Expiry:</strong> <?php echo  $result['user_license_expiry_date	']; ?></p>
+                <p><i class="bi bi-card-text me-2"></i><strong>License Issue Date:</strong><?php echo  $result['user_license_issue_date']; ?></p>
+
+        <p><i class="bi bi-calendar-check-fill me-2"></i><strong>License Expiry:</strong> <?php echo  $result['user_license_expiry_date']; ?></p>
       </div>
 
       <hr>
@@ -55,9 +58,9 @@ require_once('classes/functions.php');
         <p><i class="bi bi-currency-dollar me-2"></i><strong>Cost:</strong> $2,450</p>
         <hr>
         <div class="text-end mt-3">
-            <button class="btn btn-warning me-2">
+            <a class="btn btn-warning me-2" href="editprofile.php">
                 <i class="bi bi-pencil-square"></i> Edit Profile
-            </button>
+            </a>
             <button class="btn btn-danger">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </button>

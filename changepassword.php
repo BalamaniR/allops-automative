@@ -9,7 +9,7 @@ if (isset($_REQUEST['btn_update'])) {
   $cpwd = $_REQUEST['txt_cpass'];
   $email= $_SESSION['user_email']; 
   if(TRIM($pwd) == TRIM($cpwd)){
-    #$pwd= base64_encode($pwd);
+    $pwd= base64_encode($pwd);
     $updatepwd = $obj->update_change_password($email,$pwd);
      header("Location: search.php");
         exit();
