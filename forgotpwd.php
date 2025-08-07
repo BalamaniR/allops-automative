@@ -1,5 +1,56 @@
 <?php 
+error_reporting(0);
 require_once('includes/header.php');
+require_once('includes/header.php');
+require_once('classes/functions.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php'; // Composer autoload
+if (isset($_REQUEST['btn_forgotpwd'])) {
+  $email = filter_var($_REQUEST['txt_email'], FILTER_VALIDATE_EMAIL);
+   $sendPwd = $obj->get_user_password($email);
+   $password = $sendPwd['user_password'];
+   $updatepass = $obj->update_password_flag($email);
+
+    if ($sendPwd) {
+      $mail = new PHPMailer(true);
+      try {
+          $mail->isSMTP();
+          $mail->Host       = 'smtp.gmail.com';
+          $mail->SMTPAuth   = true;
+          $mail->Username   = 'bala621986@gmail.com';
+          $mail->Password   = 'bsvv tpfm pyqy ilig';
+          $mail->SMTPSecure = 'tls';
+          $mail->Port       = 587;
+
+          $mail->setFrom('support@allops.com', 'Allops Automative services Team');
+          $mail->addAddress($email, $uname);
+
+          $mail->isHTML(false);
+          $mail->Subject = 'Your Temporary Password - Allops Automotive Services';
+          $mail->Body    = <<<EOT
+                        Hello $uname,
+
+                        Welcome to Allops Automotive Services!
+
+                        Your temporary password is: $password
+
+                        Please change it after your first login for security reasons.
+
+                        Best regards,
+                        Allops Automotive Services Team
+                        EOT;
+
+          $mail->send();
+          echo '<div class="alert alert-success">Password  successfully sent to your registered email ID!  Please <a href="login.php">click here</a> to login.</div>';
+
+      } catch (Exception $e) {
+          echo '<div class="alert alert-warning">Email Sent failed: ' . htmlspecialchars($mail->ErrorInfo) . '</div>';
+      }
+  } else {
+      echo '<div class="alert alert-danger">Login failed. Please try again.</div>';
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,24 +72,16 @@ require_once('includes/header.php');
                 </div>
           
           <!-- Step 1: Request email or phone -->
-          <form id="requestForm">
+          <form method="POST">
             <div class="mb-3">
-              <label for="userContact" class="form-label">Email or Phone</label>
-              <input type="text" class="form-control" id="userContact" placeholder="Enter email or phone" required>
+              <label for="userContact" class="form-label">Email</label>
+              <input type="text" class="form-control" id="userEmail" name="txt_email" placeholder="Enter email or phone" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-custom w-100">Send OTP</button>
+            <button type="submit"  name="btn_forgotpwd"  value="Send" class="btn btn-primary btn-custom w-100">Send</button>
           </form>
 
           <hr>
 
-          <!-- Step 2: Enter OTP -->
-          <form id="otpForm" class="mt-3" style="display: none;">
-            <div class="mb-3">
-              <label for="otpInput" class="form-label">Enter OTP</label>
-              <input type="text" class="form-control" id="otpInput" placeholder="Enter received OTP" required>
-            </div>
-            <button type="submit" class="btn btn-success btn-custom w-100">Verify OTP</button>
-          </form>
 
         </div>
       </div>

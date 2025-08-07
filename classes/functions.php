@@ -109,6 +109,52 @@ class User {
 		}
 	}
 
+	public function get_user_password($email){
+		try {
+			$sql = "SELECT 	user_password FROM user_data WHERE user_email = :email";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':email', $email, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+	}
+
+	public function update_password_flag($email){
+		try {
+			$sql = "UPDATE user_data SET user_pwd_update = '2' WHERE user_email = :email";
+			$stmt = $this->conn->prepare($sql);
+
+			// Bind parameters
+			$stmt->bindParam(':email', $email, PDO::PARAM_STR);    // Match column type: varchar(150)
+
+			if ($stmt->execute()) {
+			// echo "Password updated successfully!";
+			} else {
+			echo "Failed to update password.";
+			}
+		} catch (PDOException $e) {
+			echo "Update error: " . $e->getMessage();
+		}
+	}
+	public function get_user_details($email){
+		try {
+			$sql = "SELECT 	* FROM user_data WHERE user_email = :email";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':email', $email, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+	}
 
 
 }

@@ -1,5 +1,11 @@
 <?php 
+error_reporting(0);
 require_once('includes/header.php');
+require_once('classes/functions.php');
+ echo "----".$email= $_SESSION['user_email'];
+
+ $result = $obj->get_user_details($email);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,19 +29,19 @@ require_once('includes/header.php');
   <div class="container mt-5">
     <div class="profile-card text-center">
       <img src="img/profilepic.jpg" alt="Profile Photo" class="rounded-circle mb-3" width="100">
-      <h4 class="fw-bold" style="color: #E76F51!important;font-weight:bold">Jessica</h4>
+      <h4 class="fw-bold" style="color: #E76F51!important;font-weight:bold"><?php echo  $result['user_name']; ?></h4>
       <p class="text-muted"><b><i>Customer ID: ALLOPS-43125</i></b></p>
 
       <hr>
 
       <div class="text-start">
-        <p><i class="bi bi-person-fill me-2"></i><strong>Name:</strong> Jessica </p>
-        <p><i class="bi bi-envelope-fill me-2"></i><strong>Email:</strong> Jessica@gmail.com</p>
-        <p><i class="bi bi-phone-fill me-2"></i><strong>Phone:</strong> +1(987)654-3210</p>
-        <p><i class="bi bi-geo-alt-fill me-2"></i><strong>Address:</strong> 11209 RICHLAND AVE UNIT 1,LOS ANGELES, CA, USA</p>
-        <p><i class="bi bi-calendar-fill me-2"></i><strong>Date of Birth:</strong> 1998-06-21</p>
-        <p><i class="bi bi-card-text me-2"></i><strong>License No:</strong> C5483921</p>
-        <p><i class="bi bi-calendar-check-fill me-2"></i><strong>License Expiry:</strong> 2030-06-21</p>
+        <p><i class="bi bi-person-fill me-2"></i><strong>Name:</strong> <?php echo  $result['user_name']; ?> </p>
+        <p><i class="bi bi-envelope-fill me-2"></i><strong>Email:</strong> <?php echo  $result['user_email']; ?></p>
+        <p><i class="bi bi-phone-fill me-2"></i><strong>Phone:</strong> <?php echo  $result['user_phone']; ?></p>
+        <p><i class="bi bi-geo-alt-fill me-2"></i><strong>Address:</strong> <?php echo  $result['user_address']; ?></p>
+        <p><i class="bi bi-calendar-fill me-2"></i><strong>Date of Birth:</strong> <?php echo  $result['user_dob']; ?></p>
+        <p><i class="bi bi-card-text me-2"></i><strong>License No:</strong><?php echo  $result['user_driver_license_number']; ?></p>
+        <p><i class="bi bi-calendar-check-fill me-2"></i><strong>License Expiry:</strong> <?php echo  $result['user_license_expiry_date	']; ?></p>
       </div>
 
       <hr>

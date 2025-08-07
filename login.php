@@ -14,7 +14,7 @@ if (isset($_REQUEST['btn_login'])) {
 
         $flag = $flagVal['user_pwd_update'];
 
-       if($flag!= 1){
+       if($flag > 0){
           header("Location: changepassword.php");
           exit();
        }else{
