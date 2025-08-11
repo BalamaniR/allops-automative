@@ -22,33 +22,25 @@ if (isset($_REQUEST['btn_forgotpwd'])) {
           $mail->Password   = 'bsvv tpfm pyqy ilig';
           $mail->SMTPSecure = 'tls';
           $mail->Port       = 587;
-
           $mail->setFrom('support@allops.com', 'Allops Automative services Team');
           $mail->addAddress($email, $uname);
-
           $mail->isHTML(false);
           $mail->Subject = 'Your Temporary Password - Allops Automotive Services';
           $mail->Body    = <<<EOT
                         Hello $uname,
-
                         Welcome to Allops Automotive Services!
-
                         Your temporary password is: $password
-
                         Please change it after your first login for security reasons.
-
                         Best regards,
                         Allops Automotive Services Team
                         EOT;
-
           $mail->send();
           echo '<div class="alert alert-success">Password  successfully sent to your registered email ID!  Please <a href="login.php">click here</a> to login.</div>';
-
       } catch (Exception $e) {
           echo '<div class="alert alert-warning">Email Sent failed: ' . htmlspecialchars($mail->ErrorInfo) . '</div>';
       }
   } else {
-      echo '<div class="alert alert-danger">Login failed. Please try again.</div>';
+      echo '<div class="alert alert-danger">Login failed. Please check the given Email ID is Registered with us or not.</div>';
   }
 }
 ?>

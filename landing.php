@@ -1,10 +1,15 @@
 <?php
 error_reporting(0);
+session_start();
 require_once('includes/header.php');
 if ($_REQUEST['btn_search'] == 'Search') {
     $fromLocation = htmlspecialchars(trim($_REQUEST['pickUp']));
     $toLocation   = htmlspecialchars(trim($_REQUEST['dropOff']));
-
+        $_SESSION['location_data'] = [
+          'from' =>  $fromLocation ,
+          'dropOff' => $toLocation ,
+          // Add other fields as needed
+        ];
     header("Location: search.php?from=" . urlencode($fromLocation) . "&to=" . urlencode($toLocation));
     exit(); // Always call exit after header redirect
 }

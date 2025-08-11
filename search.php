@@ -2,7 +2,10 @@
 error_reporting(0);
 
 require_once('includes/header.php');
-
+if (isset($_SESSION['location_data'])) {
+    $pickup = $_SESSION['location_data']['from'];
+    $destination = $_SESSION['location_data']['dropOff'];
+}
 ?>
 
 <head>
@@ -24,13 +27,13 @@ require_once('includes/header.php');
       <label for="fromLocation" class="form-label me-2">
         <i class="bi bi-geo-alt fs-3" style="color: #E76F51;"></i> From
       </label>
-      <input type="text" class="form-control" id="fromLocation" placeholder="Enter pickup location" value="<?php echo $_REQUEST['from']; ?>">
+      <input type="text" class="form-control" id="fromLocation" placeholder="Enter pickup location" value="<?php echo $pickup ?>">
     </div>
     <div class="col-md-6 d-flex align-items-center">
       <label for="toLocation" class="form-label me-2">
         <i class="bi bi-geo-alt-fill fs-3" style="color: #E76F51;"></i> To
       </label>
-      <input type="text" class="form-control" id="toLocation" placeholder="Enter drop-off location" value="<?php echo $_REQUEST['to']; ?>">
+      <input type="text" class="form-control" id="toLocation" placeholder="Enter drop-off location" value="<?php echo  $destination ?>">
     </div>
   </div>
 
