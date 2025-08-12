@@ -5,7 +5,7 @@ require_once('classes/functions.php');
  $email= $_SESSION['user_email'];
 
  $result = $obj->get_user_details($email);
-$profilePhotoPath=htmlspecialchars($result['profile_photo']);
+ $profilePhotoPath=htmlspecialchars($result['profile_photo']);
 
 ?>
 <!DOCTYPE html>

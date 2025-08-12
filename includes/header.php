@@ -44,7 +44,6 @@ session_start();
         <?php } else { ?>
           <li class="nav-item d-flex align-items-center">
             <span class="me-2">Welcome, <?php echo $_SESSION['user_name']; ?></span>
-            <a class="nav-link" href="logout.php">Logout</a>
           </li>
         <?php } ?>
       </ul>

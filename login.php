@@ -25,6 +25,7 @@ if (isset($_REQUEST['btn_login'])) {
                     $_SESSION['user_email'] = $email;
                     $_SESSION['user_id'] = $user['user_id'];  // or whatever your ID column is called
                     $_SESSION['user_name'] = $user['user_name']; 
+                    $_SESSION['customer_id'] = $user['customer_id']; 
                     $flagVal = $obj->get_pwd_change_flag($email);
                     $flag = $flagVal['user_pwd_update'];
                     if ($flag =="" || $flag== 2 || $flag ==0) {

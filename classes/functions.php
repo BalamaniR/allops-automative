@@ -280,11 +280,26 @@ public function validate_user_password($email, $pass) {
 }
 
 public function get_user_by_email($email) {
-    $sql = "SELECT user_id, user_email,user_name,user_pwd_update FROM user_data WHERE user_email = :email LIMIT 1";
+    $sql = "SELECT user_id, user_email,user_name,user_pwd_update,customer_id FROM user_data WHERE user_email = :email LIMIT 1";
     $stmt = $this->conn->prepare($sql);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function get_car_comapnyList(){
+    $sql = "SELECT `car_id`, `car_company_name` FROM `allops_car_list` WHERE  `car_availability` = 0";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function get_carnames($carId){
+    $sql = "SELECT`car_id`,`car_type` FROM `allops_car_details` WHERE `car_id`=:cid ";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':cid', $carId, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
