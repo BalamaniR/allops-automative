@@ -244,147 +244,64 @@ public function validate_user_password($email, $pass) {
 
 	
 	public function get_latest_customerID() {
-            try {
-                $prefix = 'ALLOPS25-';
+    try {
+        $prefix = 'ALLOPS25-';
 
-                // Step 1: Get the latest custom_id
-                $sql = "SELECT customer_id FROM user_data WHERE custom_id LIKE :prefix ORDER BY id DESC LIMIT 1";
-                $stmt = $this->conn->prepare($sql);
-                $likePrefix = $prefix . '%';
-                $stmt->bindParam(':prefix', $likePrefix, PDO::PARAM_STR);
-                $stmt->execute();
-
-                $latest = $stmt->fetchColumn();
-
-                // Step 2: Extract the numeric part and increment
-                if ($latest) {
-                    $number = (int) substr($latest, strlen($prefix));
-                    $number++;
-                } else {
-                    $number = 1;
-                }
-
-                // Step 3: Format the new custom_id
-                $new_custom_id = $prefix . str_pad($number, 4, '0', STR_PAD_LEFT);
-
-                // Step 4: Insert new record
-                $insertSql = "INSERT INTO user_data (customer_id) VALUES (:custom_id)";
-                $insertStmt = $this->conn->prepare($insertSql);
-                $insertStmt->bindParam(':custom_id', $new_custom_id, PDO::PARAM_STR);
-                $insertStmt->execute();
-                return $new_custom_id;
-            } catch (PDOException $e) {
-                echo "Insert error: " . $e->getMessage();
-                return false;
-            }
-    }
-
-    public function get_user_by_email($email) {
-        $sql = "SELECT user_id, user_email,user_name,user_pwd_update,customer_id FROM user_data WHERE user_email = :email LIMIT 1";
+        // Step 1: Get the latest custom_id
+        $sql = "SELECT customer_id FROM user_data WHERE custom_id LIKE :prefix ORDER BY id DESC LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $likePrefix = $prefix . '%';
+        $stmt->bindParam(':prefix', $likePrefix, PDO::PARAM_STR);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $latest = $stmt->fetchColumn();
+
+        // Step 2: Extract the numeric part and increment
+        if ($latest) {
+            $number = (int) substr($latest, strlen($prefix));
+            $number++;
+        } else {
+            $number = 1;
+        }
+
+        // Step 3: Format the new custom_id
+        $new_custom_id = $prefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+
+		// Step 4: Insert new record
+		$insertSql = "INSERT INTO user_data (customer_id) VALUES (:custom_id)";
+		$insertStmt = $this->conn->prepare($insertSql);
+		$insertStmt->bindParam(':custom_id', $new_custom_id, PDO::PARAM_STR);
+		$insertStmt->execute();
+		return $new_custom_id;
+    } catch (PDOException $e) {
+        echo "Insert error: " . $e->getMessage();
+        return false;
     }
-
-    public function get_car_name($carId){
-        $sql = "SELECT `car_id`, `car_company_name` FROM `allops_car_list` WHERE `car_id` = :carid";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':carid', $carId, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    }
-
-
-
-    public function get_car_comapnyList(){
-        $sql = "SELECT `car_id`, `car_company_name` FROM `allops_car_list` WHERE  `car_availability` = 0";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // Create your manual row
-        $manualRow = [
-            'car_id' => '0',
-            'car_company_name' => 'Any',
-        
-        ];
-        // Prepend it to the results
-        array_unshift($results, $manualRow);
-        return $results;
-    }
-
-    public function get_carnames($carId){
-        $sql = "SELECT`car_id`,`car_type` FROM `allops_car_details` WHERE `car_id`=:cid ";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':cid', $carId, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-    }
-
-    public function get_car_details($carCompany, $carName, $fuel, $seat) {
-    $conditions = [];
-    $params = [];
-
-    // Normalize carCompany
-    if ($carCompany == 0 || $carCompany === '0') {
-        $carCompany = '';
-    }
-
-    // Normalize carName
-    if ($carName == 0 || $carName === '0') {
-        $carName = '';
-    }
-
-    if ($carCompany !== '') {
-        $conditions[] = 'car_id = :car';
-        $params[':car'] = $carCompany;
-    } else {
-        $conditions[] = "car_id != ''";
-    }
-
-    if ($carName !== '') {
-        $conditions[] = 'car_type = :carname';
-        $params[':carname'] = $carName;
-    } else {
-        $conditions[] = "car_type != ''";
-    }
-
-    if ($fuel !== null) {
-        $conditions[] = "fuel_type LIKE :fuel";
-        $params[':fuel'] = '%' . $fuel . '%';
-    } else {
-        $conditions[] = "fuel_type != ''";
-    }
-
-    if ($seat === 'child') {
-        $seat = 'Y';
-    } elseif ($seat === 'adult') {
-        $seat = 'N';
-    } elseif ($seat === 'any' || $seat === '' || $seat === NULL) {
-        $seat = null; // Skip filtering
-    }
-
-    if ($seat === 'Y' || $seat === 'N') {
-        $conditions[] = 'child_seat = :child_seat';
-        $params[':child_seat'] = $seat;
-    }
-
-    $sql = "SELECT * FROM `allops_car_details` WHERE " . implode(' AND ', $conditions);
-
-    $stmt = $this->conn->prepare($sql);
-
-    // Debug output
-    foreach ($params as $key => $value) {
-        $quotedValue = is_numeric($value) ? $value : "'" . addslashes($value) . "'";
-    
-    }
-
-    $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 }
+
+public function get_user_by_email($email) {
+    $sql = "SELECT user_id, user_email,user_name,user_pwd_update,customer_id FROM user_data WHERE user_email = :email LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function get_car_comapnyList(){
+    $sql = "SELECT `car_id`, `car_company_name` FROM `allops_car_list` WHERE  `car_availability` = 0";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function get_carnames($carId){
+    $sql = "SELECT`car_id`,`car_type` FROM `allops_car_details` WHERE `car_id`=:cid ";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':cid', $carId, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 }
 $obj = new User($pdo);
