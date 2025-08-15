@@ -315,9 +315,15 @@ public function validate_user_password($email, $pass) {
     }
 
     public function get_carnames($carId){
-        $sql = "SELECT`car_id`,`car_type` FROM `allops_car_details` WHERE `car_id`=:cid ";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':cid', $carId, PDO::PARAM_STR);
+        if($carId == 0){
+             $sql = "SELECT DISTINCT(`car_type`) as car_type  FROM `allops_car_details`"; 
+             $stmt = $this->conn->prepare($sql);
+        }else{
+            $sql = "SELECT`car_id`,`car_type` FROM `allops_car_details` WHERE `car_id`=:cid ";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':cid', $carId, PDO::PARAM_STR);
+        }
+    
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -385,6 +391,131 @@ public function validate_user_password($email, $pass) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 }
+
+public function add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime,$status,$booked_date){
+  
+
+  if ($status == 'Booked') {
+    $status = 1;
+}
+
+try {
+    $sql = "INSERT INTO allops_journey_details (
+                `uid`, `customer_id`, `from_location`, `to_location`, `kickoff_date`, `kickoff_time`,
+                `journey_type`, `booking_status`, `booked_date`
+            ) VALUES (
+                :user_id,
+                :customer_id,
+                :from_location,
+                :to_location,
+                :startdate,
+                :startTime,
+                :journeyType,
+                :booking_status,
+                :booked_date
+            )";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':user_id', $uid, PDO::PARAM_STR);
+    $stmt->bindParam(':customer_id', $customer_id, PDO::PARAM_STR);
+    $stmt->bindParam(':from_location', $from, PDO::PARAM_STR);
+    $stmt->bindParam(':to_location', $to, PDO::PARAM_STR);
+    $stmt->bindParam(':startdate', $departDate, PDO::PARAM_STR);
+    $stmt->bindParam(':startTime', $departTime, PDO::PARAM_STR);
+    $stmt->bindParam(':journeyType', $journeyType, PDO::PARAM_STR);
+    $stmt->bindParam(':booking_status', $status, PDO::PARAM_STR);    
+    $stmt->bindParam(':booked_date', $booked_date, PDO::PARAM_STR);  // ✅ Corrected name
+
+    if ($stmt->execute()) {
+        return $this->conn->lastInsertId();
+    } else {
+        return false;
+    }
+} catch (PDOException $e) {
+    echo "Insertion error: " . $e->getMessage();
+    return false;
+}
+
+}
+
+
+public function get_journey_details($customer_id){
+    try {
+			$sql = "SELECT * FROM `allops_journey_details` WHERE customer_id = :cid";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':cid', $customer_id, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+}
+
+public function get_my_carData($carID, $carType, $fuel, $seat) {
+    $conditions = [];
+    $params = [];
+
+    if ($carID == 0 || $carID === '0') $carID = '';
+    if ($carType == 0 || $carType === '0') $carType = '';
+
+    if ($carID !== '') {
+        $conditions[] = 'car_id = :car';
+        $params[':car'] = $carID;
+    } else {
+        $conditions[] = "car_id != ''";
+    }
+
+    if ($carType !== '') {
+        $conditions[] = 'car_type = :carname';
+        $params[':carname'] = $carType;
+    } else {
+        $conditions[] = "car_type != ''";
+    }
+
+
+    if ($fuel !== null && $fuel !== '' && strtolower($fuel) !== 'null') {
+    $conditions[] = "fuel_type LIKE :fuel";
+    $params[':fuel'] = '%' . $fuel . '%';
+} else {
+    $conditions[] = "fuel_type != ''";
+}
+
+    if ($seat === 'child') $seat = 'Y';
+    elseif ($seat === 'adult') $seat = 'N';
+    elseif ($seat === 'any' || $seat === '' || $seat === NULL) $seat = null;
+
+    if ($seat === 'Y' || $seat === 'N') {
+        $conditions[] = 'child_seat = :child_seat';
+        $params[':child_seat'] = $seat;
+    }
+
+    $sql = "SELECT * FROM `allops_car_details` WHERE " . implode(' AND ', $conditions) . " LIMIT 1";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute($params);
+    $sqlDebug = $sql;
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function get_pmt_details($customer_id){
+    try {
+			$sql = "SELECT * FROM `allops_payment_details` WHERE `customer_id` = :cid";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':cid', $customer_id, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+}
+
+
+
 
 }
 $obj = new User($pdo);
