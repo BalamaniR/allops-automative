@@ -69,9 +69,10 @@ if (isset($_REQUEST['btn_search'])) {
 
 <head>
   <meta charset="UTF-8">
-  <title>Journey Planner - Allops Automative Services</title>
+  <title>Journey Planner - Allops Automotive Services</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
+  
   <style>
     .btn:hover{
       background-color: #E76F51;
@@ -290,7 +291,7 @@ if (isset($_REQUEST['btn_search'])) {
 <?php endif; ?>
   </div>
 </body>
-
+</html>
 
 <?php
 require_once('includes/footer.php');

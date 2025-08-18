@@ -55,9 +55,10 @@ if (isset($_REQUEST['btn_login'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login to Allops Automative Services</title>
+  <title>Login to Allops Automotive Services</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
+  
     <style>
 
      .required-label::after {
@@ -75,7 +76,7 @@ if (isset($_REQUEST['btn_login'])) {
 </head>
 <body>
   <div class="login-container text-center">
-    <h2 class="mb-4">Login to Allops Automative Services</h2>
+    <h2 class="mb-4">Login to Allops Automotive Services</h2>
 
 
     <div class="<?php echo $class;?>"><?php echo $msg;?></div>

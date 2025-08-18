@@ -22,7 +22,7 @@ if (isset($_REQUEST['btn_forgotpwd'])) {
           $mail->Password   = 'bsvv tpfm pyqy ilig';
           $mail->SMTPSecure = 'tls';
           $mail->Port       = 587;
-          $mail->setFrom('support@allops.com', 'Allops Automative services Team');
+          $mail->setFrom('support@allops.com', 'Allops Automotive services Team');
           $mail->addAddress($email, $uname);
           $mail->isHTML(false);
           $mail->Subject = 'Your Temporary Password - Allops Automotive Services';
@@ -49,7 +49,7 @@ if (isset($_REQUEST['btn_forgotpwd'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login to Allops Automative Services</title>
+  <title>Login to Allops Automotive Services</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>

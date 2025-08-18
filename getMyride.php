@@ -28,7 +28,7 @@ $journeyData = $obj->get_journey_details($customer_id);
 ?>
 <head>
   <meta charset="UTF-8">
-  <title>Journey Planner - Allops Automative Services</title>
+  <title>Journey Planner - Allops Automotive Services</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
   <style>

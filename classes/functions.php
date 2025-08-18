@@ -9,7 +9,7 @@ class User {
         $this->conn = $pdo;
     }
 	
-	public function add_user_data($uname, $phone, $email, $address, $license_num, $license_issueDate, $license_exp_date, $dob) {
+	public function add_user_data($uname, $phone, $email, $address, $license_num, $license_issueDate, $license_exp_date, $dob,$policy,$policyNumber,$policyCompany,$insuranceCopyPath) {
     try {
         $prefix = 'ALLOPS25-';
 
@@ -47,6 +47,10 @@ class User {
                     user_license_issue_date,
                     user_license_expiry_date,
                     user_dob,
+                    policy,
+                    policy_number,
+                    policy_company,
+                    insurance_copy_path,
                     user_registered_date
                 ) VALUES (
                     :custom_id,
@@ -58,6 +62,10 @@ class User {
                     :license_issue_date,
                     :license_exp_date,
                     :dob,
+                    :policy,
+                    :policyNo,
+                    :insCompany,
+                    :policyPath,
                     :reg_date
                 )";
 
@@ -71,6 +79,10 @@ class User {
         $stmt->bindParam(':license_issue_date', $license_issueDate, PDO::PARAM_STR);
         $stmt->bindParam(':license_exp_date', $license_exp_date, PDO::PARAM_STR);
         $stmt->bindParam(':dob', $dob, PDO::PARAM_STR);
+        $stmt->bindParam(':policy', $policy, PDO::PARAM_STR);
+        $stmt->bindParam(':policyNo', $policyNumber, PDO::PARAM_STR);
+        $stmt->bindParam(':insCompany', $policyCompany, PDO::PARAM_STR);
+        $stmt->bindParam(':policyPath', $insuranceCopyPath, PDO::PARAM_STR);
         $stmt->bindParam(':reg_date', $reg_date, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
@@ -514,6 +526,32 @@ public function get_pmt_details($customer_id){
 		}
 }
 
+
+public function  validateLicense($age, $licenseIssued) {
+    $today = new DateTime();
+    $interval = $today->diff($licenseIssued);
+    $licenseYearsAgo = $interval->y;
+
+    if ($age < $licenseYearsAgo) {
+        return "Invalid license: Issued too early for the user's age.";
+    }
+    return null;
+}
+
+
+public function get_myride_history($customer_id){
+        try {
+			$sql = "SELECT * FROM `allops_journey_details` WHERE customer_id = :cid";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':cid', $customer_id, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+}
 
 
 

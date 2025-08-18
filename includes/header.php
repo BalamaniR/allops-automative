@@ -10,7 +10,7 @@ session_start();
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <style>
     .app_title{
      margin-right: 500px;
@@ -26,7 +26,7 @@ session_start();
 
  <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand d-flex flex-column align-items-center" href="#">
+    <a class="navbar-brand d-flex flex-column align-items-center" href="landing.php">
       <img src="img/logo.png" alt="Logo" width="80" height="60" class="me-2">
     </a>
 
@@ -62,7 +62,7 @@ session_start();
   <ul class="list-unstyled mb-0">
     <li><a href="myprofile.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-person-circle"> Profile</a></li>
     <li><a href="search.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-car-front-fill"> Book Ride</a></li>
-     <li><a href="myhistory.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-clock-history"> Ride History</a></li>
+     <li><a href="rideHistory.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-clock-history"> Ride History</a></li>
     <li><a href="#" class="text-dark text-decoration-none d-block py-2 fs-6 bi-gear-fill"> Settings</a></li>
     <li><a href="logout.php" class="text-dark text-decoration-none d-block py-2 fs-6 bi-box-arrow-right"> Logout</a></li>
   </ul>
