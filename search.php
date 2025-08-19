@@ -10,7 +10,8 @@ if (isset($_SESSION['location_data'])) {
 $uid         = $_SESSION['user_id'];
 $customer_id = $_SESSION['customer_id'];
 
-if($_SESSION['user_id'] != ''){
+if($uid!= ''){
+
   $bookurl = 'getMyride.php';
 }else{
   $bookurl = 'login.php';
@@ -26,7 +27,7 @@ if (isset($_REQUEST['btn_search'])) {
     $destination = $_SESSION['location_data'][$to];
     $journeyType = $_POST['journeyType'] ?? '';
     $departDate = $_REQUEST['departureDate'];
-  echo "---".  $departTime = $_REQUEST['departureTime'];
+    $departTime = $_REQUEST['departureTime'];
     $carCompany  = $_REQUEST['carCompany'] ?? '';
     $carName     = $_REQUEST['carName'] ?? '';
     $fuel        = $_REQUEST['carfuel'] ?? '';
@@ -49,22 +50,37 @@ if (isset($_REQUEST['btn_search'])) {
           }
       }
 
-      if($_SESSION['user_id'] != ''){
-          $status= 'Booked';
-          $booked_date = date("Y-m-d");
-          $journyDetails = $obj->add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime, $status, $booked_date);
-          $bookurl = 'getMyride.php';
-      }else{
-           $bookurl = 'login.php';
-      }
-    
-      if (empty($msg)) {
-        $showResults = true;
-      }
-    $cars = $obj->get_car_details($carCompany, $carName, $fuel, $seat);
-    $carCount = count($cars);
-    
+if (empty($msg)) {
+    try {
+        $departureDate = new DateTime($departDate);   
+        $currentDate = new DateTime();
+        if ($departureDate < $currentDate) {
+            $msg = "Departure date must be future date.";
+            $class = "error";
+        }
+      
+    } catch (Exception $e) {
+        $msg = "Invalid license date format.";
+        $class = "error";
+    }
 }
+   
+}
+
+echo "--".$_SESSION['user_id'];
+
+if(isset($_REQUEST['btn_book']) && $_SESSION['user_id'] != ''){
+    $status= 'Booked';
+    $booked_date = date("Y-m-d");
+    $journyDetails = $obj->add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime, $status, $booked_date);
+ 
+}
+
+if (empty($msg)) {
+  $showResults = true;
+}
+$cars = $obj->get_car_details($carCompany, $carName, $fuel, $seat);
+$carCount = count($cars);
 ?>
 
 <head>
@@ -300,7 +316,7 @@ require_once('includes/footer.php');
 $(document).ready(function(){
 
 $('.btn_book').click(function(){
-
+console.log('<?php  $bookurl ?>');
 const pickup = $('#fromLocation').val();
 const dropoff = $('#toLocation').val();
 const journeyType = $('input[name="journeyType"]:checked').val();
@@ -312,7 +328,7 @@ const startTime = $('#departureTime').val();
 
 
    const url = `search.php?pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}&carbrand=${encodeURIComponent(carBrand)}&carType=${encodeURIComponent(carType)}&journey=${encodeURIComponent(journeyType)}&startDate=${encodeURIComponent(startDate)}&startTime=${encodeURIComponent(startTime)}&fuelType=${encodeURIComponent(fuelType)}`;
-window.location.href = '<?= $bookurl ?>' + 
+window.location.href = '<?php echo $bookurl ?>' + 
   '?pickup=' + encodeURIComponent(pickup) +
   '&dropoff=' + encodeURIComponent(dropoff) +
   '&carbrand=' + encodeURIComponent(carBrand) +

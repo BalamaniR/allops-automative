@@ -3,9 +3,13 @@ error_reporting(0);
 require_once('includes/header.php');
 require_once('classes/functions.php');
  $email= $_SESSION['user_email'];
-
+ $uid         = $_SESSION['user_id'];
+ $customer_id = $_SESSION['customer_id'];
  $result = $obj->get_user_details($email);
  $profilePhotoPath=htmlspecialchars($result['profile_photo']);
+ $totalrides = $obj->get_ride_count($uid);
+ $latestRide = $obj->get_journey_details($customer_id);
+ $latestpmt = $obj->get_latest_pmt_details($uid);
 
 ?>
 <!DOCTYPE html>
@@ -42,9 +46,10 @@ require_once('classes/functions.php');
         <p><i class="bi bi-geo-alt-fill me-2"></i><strong>Address:</strong> <?php echo  $result['user_address']; ?></p>
         <p><i class="bi bi-calendar-fill me-2"></i><strong>Date of Birth:</strong> <?php echo  $result['user_dob']; ?></p>
         <p><i class="bi bi-card-text me-2"></i><strong>License No:</strong><?php echo  $result['user_driver_license_number']; ?></p>
-                <p><i class="bi bi-card-text me-2"></i><strong>License Issue Date:</strong><?php echo  $result['user_license_issue_date']; ?></p>
-
+        <p><i class="bi bi-card-text me-2"></i><strong>License Issue Date:</strong><?php echo  $result['user_license_issue_date']; ?></p>
         <p><i class="bi bi-calendar-check-fill me-2"></i><strong>License Expiry:</strong> <?php echo  $result['user_license_expiry_date']; ?></p>
+         <p><i class="bi bi-card-text me-2"></i><strong>Insurance Number:</strong><?php echo  $result['insurance_policy_number']; ?></p>
+        <p><i class="bi bi-building me-2"></i><strong>Insurance Company:</strong> <?php echo  $result['insurance_policy_company']; ?></p>
       </div>
 
       <hr>
@@ -52,10 +57,10 @@ require_once('classes/functions.php');
         <h5 class="text-start mb-3" style="color: #E76F51!important;font-weight:bold"><i class="bi bi-clock-history me-2"></i> Ride Summary</h5>
 
         <div class="text-start">
-        <p><i class="bi bi-car-front-fill me-2"></i><strong>Total Rides:</strong> 27</p>
-        <p><i class="bi bi-calendar-event-fill me-2"></i><strong>Last Ride:</strong> July 25, 2025</p>
-        <p><i class="bi bi-geo-fill me-2"></i><strong>Route:</strong> Los Angeles → Texas</p>
-        <p><i class="bi bi-currency-dollar me-2"></i><strong>Cost:</strong> $2,450</p>
+        <p><i class="bi bi-car-front-fill me-2"></i><strong>Total Rides:</strong> <?php echo  $totalrides['cnt'];?></p>
+        <p><i class="bi bi-calendar-event-fill me-2"></i><strong>Last Ride:</strong><?php echo $latestRide['kickoff_date']?></p>
+        <p><i class="bi bi-geo-fill me-2"></i><strong>Route:</strong> <?php echo $latestRide['from_location']?> → <?php echo $latestRide['to_location']?></p>
+        <p><i class="bi bi-currency-dollar me-2"></i><strong>Cost:</strong> <?php echo $latestpmt['total_amt_paid']?></p>
         <hr>
         <div class="text-end mt-3">
             <a class="btn btn-warning me-2" href="editprofile.php">

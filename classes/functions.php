@@ -9,7 +9,7 @@ class User {
         $this->conn = $pdo;
     }
 	
-	public function add_user_data($uname, $phone, $email, $address, $license_num, $license_issueDate, $license_exp_date, $dob,$policy,$policyNumber,$policyCompany,$insuranceCopyPath) {
+	public function add_user_data($uname, $phone, $email, $address, $license_num, $license_issueDate, $license_exp_date, $dob,$policyNumber,$policyCompany,$insuranceCopyPath) {
     try {
         $prefix = 'ALLOPS25-';
 
@@ -35,7 +35,7 @@ class User {
 
         // Step 4: Prepare registration date
         $reg_date = date("Y-m-d");
-
+        $pwd_update = '0';
         // Step 5: Insert new record
         $sql = "INSERT INTO user_data (
                     customer_id,
@@ -47,11 +47,11 @@ class User {
                     user_license_issue_date,
                     user_license_expiry_date,
                     user_dob,
-                    policy,
-                    policy_number,
-                    policy_company,
+                    insurance_policy_number,
+                    insurance_policy_company,
                     insurance_copy_path,
-                    user_registered_date
+                    user_registered_date,
+                    user_pwd_update
                 ) VALUES (
                     :custom_id,
                     :uname,
@@ -62,11 +62,11 @@ class User {
                     :license_issue_date,
                     :license_exp_date,
                     :dob,
-                    :policy,
                     :policyNo,
                     :insCompany,
                     :policyPath,
-                    :reg_date
+                    :reg_date,
+                    :pwd_update
                 )";
 
         $stmt = $this->conn->prepare($sql);
@@ -79,11 +79,11 @@ class User {
         $stmt->bindParam(':license_issue_date', $license_issueDate, PDO::PARAM_STR);
         $stmt->bindParam(':license_exp_date', $license_exp_date, PDO::PARAM_STR);
         $stmt->bindParam(':dob', $dob, PDO::PARAM_STR);
-        $stmt->bindParam(':policy', $policy, PDO::PARAM_STR);
         $stmt->bindParam(':policyNo', $policyNumber, PDO::PARAM_STR);
         $stmt->bindParam(':insCompany', $policyCompany, PDO::PARAM_STR);
         $stmt->bindParam(':policyPath', $insuranceCopyPath, PDO::PARAM_STR);
         $stmt->bindParam(':reg_date', $reg_date, PDO::PARAM_STR);
+         $stmt->bindParam(':pwd_update', $pwd_update, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -453,7 +453,7 @@ try {
 
 public function get_journey_details($customer_id){
     try {
-			$sql = "SELECT * FROM `allops_journey_details` WHERE customer_id = :cid";
+			$sql = "SELECT * FROM `allops_journey_details` WHERE customer_id = :cid ORDER BY id  DESC LIMIT 1";
 			$stmt = $this->conn->prepare($sql);
 			$stmt->bindParam(':cid', $customer_id, PDO::PARAM_STR);
 			$stmt->execute();
@@ -527,12 +527,15 @@ public function get_pmt_details($customer_id){
 }
 
 
-public function  validateLicense($age, $licenseIssued) {
-    $today = new DateTime();
-    $interval = $today->diff($licenseIssued);
-    $licenseYearsAgo = $interval->y;
+public function  validateLicense($age, $userLicissueDate,$dob) {
 
-    if ($age < $licenseYearsAgo) {
+    $today = new DateTime();
+    $interval = $today->diff($userLicissueDate);
+    $licenseYearsAgo = $interval->y;
+    $minLicenseDate = (clone $dob)->modify('+16 years');
+
+ 
+    if ($userLicissueDate < $minLicenseDate) {
         return "Invalid license: Issued too early for the user's age.";
     }
     return null;
@@ -553,6 +556,49 @@ public function get_myride_history($customer_id){
 		}
 }
 
+
+public function get_my_cardetails($customer_id){
+     try {
+			$sql = "SELECT * FROM `allops_journey_details` WHERE customer_id = :cid";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':cid', $customer_id, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+}
+
+
+public function get_ride_count($uid){
+    try {
+			$sql = "SELECT count(*) as cnt  FROM `allops_journey_details` WHERE `uid`= :uid";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':uid', $uid, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+}
+
+public function get_latest_pmt_details($uid){
+     try {
+			$sql = "SELECT * FROM `allops_payment_details` WHERE `uid` = :uid ORDER BY pid  DESC LIMIT 1";
+			$stmt = $this->conn->prepare($sql);
+			$stmt->bindParam(':uid', $uid, PDO::PARAM_STR);
+			$stmt->execute();
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			echo "Validation error: " . $e->getMessage();
+			return false;
+		}
+}
 
 
 }

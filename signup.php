@@ -1,5 +1,5 @@
 <?php 
-#error_reporting(0);
+error_reporting(0);
 require_once('includes/header.php');
 require_once('classes/functions.php');
 use PHPMailer\PHPMailer\PHPMailer;
@@ -8,6 +8,8 @@ require 'vendor/autoload.php'; // Composer autoload
  $msg ='';
  $class='';
  $age = null;
+ $userLicissueDate = null;
+ $userLicexpiryDate = null;
 function generateTempPassword($length = 10) {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     return substr(str_shuffle($chars), 0, $length);
@@ -27,7 +29,6 @@ $dobInput = $_REQUEST['dob'];
 $license_num = $_REQUEST['license'];
 $license_issueDate = $_REQUEST['lic_issueDate'];
 $license_exp_date = $_REQUEST['lic_exp_date'];
-$policy = $_REQUEST['insurance'] ?? '';
 $policyNumber = $_REQUEST['policyno'];
 $policyCompany = $_REQUEST['incuranceCompany'];
 $insuranceCopy = $_FILES['insurance_copy'] ?? null;
@@ -44,7 +45,8 @@ $requiredFields = [
     'license_num' => 'License Number cannot be empty',
     'license_issueDate' => 'License issue date cannot be empty',
     'license_exp_date' => 'License Expiry date cannot be empty',
-    'policy' => 'Policy input cannot be empty'
+    'policyNumber'=>'Policy Number Cannot be empty',
+    'policyCompany'=>'Policy Company Cannot be empty'
 ];
 
 foreach ($requiredFields as $field => $message) {
@@ -77,14 +79,20 @@ if (empty($msg)) {
     }
 }
 
+
+
 // Validate license dates
 if (empty($msg)) {
     try {
         $userLicissueDate = new DateTime($license_issueDate);
         $userLicexpiryDate = new DateTime($license_exp_date);
-
+        $currentDate = new DateTime();
         if ($userLicexpiryDate <= $userLicissueDate) {
             $msg = "Expiry date must be after the issue date.";
+            $class = "error";
+        }
+        if ($userLicexpiryDate < $currentDate) {
+            $msg = "License got Expired.";
             $class = "error";
         }
     } catch (Exception $e) {
@@ -94,8 +102,8 @@ if (empty($msg)) {
 }
 
 // Validate license issuance age
-if (empty($msg) && isset($age)) {
-    $error = $obj->validateLicense($age, $userLicissueDate);
+if (empty($msg) && isset($age) && $userLicissueDate instanceof DateTime) {
+    $error = $obj->validateLicense($age, $userLicissueDate,$dob);
     if ($error) {
         $msg = $error;
         $class = "error";
@@ -104,14 +112,9 @@ if (empty($msg) && isset($age)) {
 
 // Insurance validation
 $insuranceErrors = [];
+if (empty($msg)) {
+    $insuranceErrors = [];
 
-if ($policy === 'Yes') {
-    if (empty($policyNumber)) {
-        $insuranceErrors[] = "Policy Number cannot be empty.";
-    }
-    if (empty($policyCompany)) {
-        $insuranceErrors[] = "Insurance Company name cannot be empty.";
-    }
     if (empty($insuranceCopy['name'])) {
         $insuranceErrors[] = "Insurance copy is mandatory.";
     } elseif ($insuranceCopy['error'] !== UPLOAD_ERR_OK) {
@@ -122,7 +125,7 @@ if ($policy === 'Yes') {
         $msg = implode('<br>', $insuranceErrors);
         $class = "error";
     }
-}
+
 
       if (isset($_FILES['insurance_copy']) && $_FILES['insurance_copy']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['insurance_copy']['tmp_name'];
@@ -148,10 +151,10 @@ if ($policy === 'Yes') {
             echo '<div class="alert alert-danger">Invalid image type. Only JPG, PNG, and GIF are allowed.</div>';
             return;
         }
-
+}
       // If no errors, proceed with DB insert and email
       if (empty($msg)) {
-            $user = $obj->add_user_data($uname,$phone, $email, $address,$license_num,$license_issueDate,$license_exp_date,$dobInput,$policy,$policyNumber,$policyCompany,$insuranceCopyPath);
+            $user = $obj->add_user_data($uname,$phone, $email, $address,$license_num,$license_issueDate,$license_exp_date,$dobInput,$policyNumber,$policyCompany,$insuranceCopyPath);
             $tempPassword = generateTempPassword();
             if ($user) {
                 $updatepass = $obj->update_user_password($user, $tempPassword);
@@ -279,24 +282,8 @@ if ($policy === 'Yes') {
         <input type="date" class="form-control" id="expiry" name="lic_exp_date" value="<?= htmlspecialchars($_POST['lic_exp_date'] ?? '') ?>">
       </div>
     </div>
-
-      <div class="row mb-3">
-            <label class="col-sm-4 col-form-label required-label">
-             Do you have Insurance?
-            </label>
-              <div class="col-sm-8">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="insurance" id="yes" value="Yes" <?= ($_POST['insurance'] === 'Yes') ? 'checked' : '' ?>>
-                      <label class="form-check-label" for="insurance">Yes</label>
-                    </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="insurance" id="No" value="No" <?= ($_POST['insurance'] === 'No') ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="insurance">No</label>
-                  </div>
-              
-              </div>
-      </div>
-<div id="insuranceDiv">
+      
+  <div id="insuranceDiv">
     <div class="row mb-3">
       <label for="policy" class="col-sm-4 col-form-label required-label">Policy Number</label>
       <div class="col-sm-8">

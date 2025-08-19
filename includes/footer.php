@@ -21,7 +21,7 @@
         <ul class="list-unstyled">
           <li><a href="#" class="text-light text-decoration-none">Home</a></li>
           <li><a href="#" class="text-light text-decoration-none">Browse Cars</a></li>
-          <li><a href="#" class="text-light text-decoration-none">Locations</a></li>
+          <li><a href="privacy.php" class="text-light text-decoration-none">Privacy & Policy statement</a></li>
           <li><a href="#" class="text-light text-decoration-none">FAQs</a></li>
         </ul>
       </div>

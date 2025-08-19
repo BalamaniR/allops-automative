@@ -180,6 +180,20 @@ $profilePhotoPath=htmlspecialchars($result['profile_photo']);
       </div>
     </div>
 
+    <div class="row mb-3">
+      <label for="issue" class="col-sm-4 col-form-label required-label">Policy Number</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="policyno" name="policyno" value="<?php  ?>">
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="expiry" class="col-sm-4 col-form-label required-label">Insurance Company</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="incuranceCompany" name="incuranceCompany" value="<?php  ?>">
+      </div>
+    </div>
+
 
     <div class="row mb-3">
       <label for="dob" class="col-sm-4 col-form-label required-label">Profile picture</label>

@@ -156,10 +156,14 @@ apply.</label>
           </div>
            <div class="form-check mb-3">
             <input class="form-check-input term-check" type="checkbox" id="term8">
-            <label class="form-check-label" for="term8">☐ 9. Unauthorized Use: Use of the vehicle for illegal purposes, racing, towing, or subleasing is strictly prohibited and may result
+            <label class="form-check-label" for="term8"> 9. Unauthorized Use: Use of the vehicle for illegal purposes, racing, towing, or subleasing is strictly prohibited and may result
 in immediate termination of the agreement.</label>
           </div>
-
+          <div class="form-check mb-3">
+            <input class="form-check-input term-check" type="checkbox" id="term8">
+            <label class="form-check-label" for="term8">10.<span style="color: #E76F51;"><a href="privacy.php"> Customer Agreement Statement</a></span>
+By proceeding with a reservation or rental through Allops Automotive Services, you acknowledge that you have read, understood, and agreed to our Rental Policy, including the Local Addenda, Rental Charges, and terms regarding Additional Drivers. You also consent to our Privacy Statement, which outlines how your information is collected, used, and protected.</label>
+          </div>
           <!-- Accept All Checkbox -->
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="acceptAll">
