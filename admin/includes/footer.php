@@ -5,7 +5,7 @@
       <!-- Brand Info -->
       <div class="col-md-4 mb-3">
         <div class="mb-2">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center mb-2 ">
             <img src="img/logo.png" alt="Allops Logo" style="height: 40px; margin-right: 10px;">
             <div>
               <h5 class="mb-0">Allops Rental Service</h5>

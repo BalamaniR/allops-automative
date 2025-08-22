@@ -1,5 +1,5 @@
 <?php
-#error_reporting(0);
+error_reporting(0);
 #ini_set('display_errors', 1);
 require_once('includes/header.php');
 require_once('classes/functions.php');
@@ -8,17 +8,32 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php'; // Composer autoload
 $name = $_SESSION['user_name'];
 $email=$_SESSION['user_email'] ;
+$uid=   $_SESSION['user_id'] ;
 $customer_id = $_SESSION['customer_id'];
-$latestRide = $obj->get_journey_details($customer_id);
+/*$latestRide = $obj->get_journey_details($customer_id);
 $carDetails = $obj->get_my_cardetails($customer_id);
 $from =$latestRide['from_location'];
 $to=$latestRide['to_location'];
 $startDate =$latestRide['kickoff_date'];
-$startTime= $latestRide['kickoff_time'];
+$startTime= $latestRide['kickoff_time'];*/
 
+
+
+$from = $_REQUEST['pickup'];
+$to  = $_REQUEST['dropoff'];
+$carID = $_REQUEST['carbrandID'];
+$carTypeID  = $_REQUEST['carTypeID'];
+$car  = $_REQUEST['carName'];
+$carType  = $_REQUEST['brandtype'];
+$journeyType  = $_REQUEST['journey'];
+$startDate  = $_REQUEST['startDate'];
+$startTime  = $_REQUEST['startTime'];
+$fuelType  = $_REQUEST['fuelType'];
+$status = 1;
+$journyDetails = $obj->add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$startDate,$startTime,$car,$carType, $status, $booked_date);
 
  $user = $obj->get_user_details($email);
-            if ($user) {
+            if ($journyDetails) {
                 $mail = new PHPMailer(true);
                     try {
                         $mail->isSMTP();
@@ -33,16 +48,19 @@ $startTime= $latestRide['kickoff_time'];
                         $mail->isHTML(false);
                         $mail->Subject = 'Welcome to Allops Automotive Services';
                         $mail->Body   = <<<EOT
-                        Hello $name,
-                        your Toyota Economy ride has been successfully booked!
+                        Hello <strong>$name</strong>,<br><br>
+                        your <strong>$car . $carType Economy</strong> ride has been successfully booked!
                        
                         Thank you for trusting Allops and choosing to ride with us.
                         Your journey details are provided below.
                         
-                        Location From :  $from
-                        location To   :  $to
-                        Journey Start Date : $startDate
-                        Journey Start Time : $startTime
+                        Location From :  <strong> $from</strong> 
+                        location To   : <strong> $to</strong> 
+
+                        Journey Start Date : <strong>$startDate</strong> 
+                        Journey Start Time : <strong>$startTime</strong> 
+                        Journey Type : <strong>$journeyType  </strong> 
+                      
 
                         Wishing you a smooth and joyful drive ahead!
 

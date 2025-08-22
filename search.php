@@ -67,14 +67,15 @@ if (empty($msg)) {
    
 }
 
-echo "--".$_SESSION['user_id'];
 
-if(isset($_REQUEST['btn_book']) && $_SESSION['user_id'] != ''){
+
+/*if(isset($_REQUEST['btn_book']) && $_SESSION['user_id'] != ''){
     $status= 'Booked';
     $booked_date = date("Y-m-d");
+    
     $journyDetails = $obj->add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime, $status, $booked_date);
  
-}
+}*/
 
 if (empty($msg)) {
   $showResults = true;
@@ -223,9 +224,11 @@ $carCount = count($cars);
         <div class="card car-card">
           <img src="<?php echo $car['car_img_path']?>" alt="Sedan Car"  style="height: 275px;">
           <div class="card-body">
-            <h5 class="card-title" style="text-align:center;color:#E76F51;font-weight:bold"><i><?php echo $cname['car_company_name']?></i></h5>    
-            <h6 class="card-title" style="text-align:center;color:#002D62;font-weight:bold;margin-bottom: 30px;margin-top: 20px;"><i><?php echo $car['car_type']?></i></h6>  
-               <div class="card-text">
+            <h5 class="card-title car_name" style="text-align:center;color:#E76F51;font-weight:bold"><i><?php echo $cname['car_company_name']?></i></h5> 
+            <input type="hidden" name="car_name" id="car_name" value="<?php echo $cname['car_company_name']?>">   
+            <h6 class="card-title car_type" style="text-align:center;color:#002D62;font-weight:bold;margin-bottom: 30px;margin-top: 20px;"><i><?php echo $car['car_type']?></i></h6>  
+            <input type="hidden" name="car_brandtype" id="car_brandtype"  value="<?php echo $car['car_type'];?>">   
+                    <div class="card-text">
                       <div class="d-flex align-items-center mb-2">
                         <i class="bi bi-battery-charging text-success me-2" title="Electric"></i>
                         <i class="bi bi-fuel-pump text-warning me-2" title="Fuel"></i>
@@ -321,18 +324,29 @@ const pickup = $('#fromLocation').val();
 const dropoff = $('#toLocation').val();
 const journeyType = $('input[name="journeyType"]:checked').val();
 const carBrand = '<?php echo  $carCompany ?>';
-const carType = '<?php echo $carName ?>';
 const fuelType = $('#carfuel').val();
 const startDate = $('#departureDate').val();
 const startTime = $('#departureTime').val();
+const carName =$('#car_name').val();
+const carbrandtype =$('#car_brandtype').val();
 
-
-   const url = `search.php?pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}&carbrand=${encodeURIComponent(carBrand)}&carType=${encodeURIComponent(carType)}&journey=${encodeURIComponent(journeyType)}&startDate=${encodeURIComponent(startDate)}&startTime=${encodeURIComponent(startTime)}&fuelType=${encodeURIComponent(fuelType)}`;
-window.location.href = '<?php echo $bookurl ?>' + 
+    localStorage.setItem('pickup', pickup);
+    localStorage.setItem('dropoff', dropoff);
+    localStorage.setItem('carbrandID', carBrand);
+    localStorage.setItem('carTypeID', carName);
+    localStorage.setItem('carName', carName);
+    localStorage.setItem('CarBrand', carbrandtype);
+    localStorage.setItem('journey', journeyType);
+    localStorage.setItem('startDate', startDate);
+    localStorage.setItem('startTime', startTime);
+   const url = `search.php?pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}&carbrand=${encodeURIComponent(carBrand)}&carType=${encodeURIComponent(carbrandtype)}&journey=${encodeURIComponent(journeyType)}&startDate=${encodeURIComponent(startDate)}&startTime=${encodeURIComponent(startTime)}&fuelType=${encodeURIComponent(fuelType)}`;
+   window.location.href = '<?php echo $bookurl ?>' + 
   '?pickup=' + encodeURIComponent(pickup) +
   '&dropoff=' + encodeURIComponent(dropoff) +
-  '&carbrand=' + encodeURIComponent(carBrand) +
-  '&carType=' + encodeURIComponent(carType) +
+  '&carbrandID=' + encodeURIComponent(carBrand) +
+  '&carTypeID=' + encodeURIComponent(carbrandtype) +
+  '&carName=' + encodeURIComponent(carName) +
+  '&brandtype=' + encodeURIComponent(carbrandtype) +
   '&journey=' + encodeURIComponent(journeyType) +
   '&startDate=' + encodeURIComponent(startDate) +
   '&startTime=' + encodeURIComponent(startTime) +

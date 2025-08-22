@@ -404,17 +404,14 @@ public function validate_user_password($email, $pass) {
 
 }
 
-public function add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime,$status,$booked_date){
+public function add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime,$car,$carType, $status, $booked_date){
   
 
-  if ($status == 'Booked') {
-    $status = 1;
-}
-
+     $booked_date = date("Y-m-d");
 try {
     $sql = "INSERT INTO allops_journey_details (
                 `uid`, `customer_id`, `from_location`, `to_location`, `kickoff_date`, `kickoff_time`,
-                `journey_type`, `booking_status`, `booked_date`
+                `journey_type`,`car`,`car_type`, `booking_status`, `booked_date`
             ) VALUES (
                 :user_id,
                 :customer_id,
@@ -423,6 +420,8 @@ try {
                 :startdate,
                 :startTime,
                 :journeyType,
+                :car,
+                :ctype,
                 :booking_status,
                 :booked_date
             )";
@@ -435,8 +434,10 @@ try {
     $stmt->bindParam(':startdate', $departDate, PDO::PARAM_STR);
     $stmt->bindParam(':startTime', $departTime, PDO::PARAM_STR);
     $stmt->bindParam(':journeyType', $journeyType, PDO::PARAM_STR);
+    $stmt->bindParam(':car', $car, PDO::PARAM_STR);
+    $stmt->bindParam(':ctype', $carType, PDO::PARAM_STR);
     $stmt->bindParam(':booking_status', $status, PDO::PARAM_STR);    
-    $stmt->bindParam(':booked_date', $booked_date, PDO::PARAM_STR);  // ✅ Corrected name
+    $stmt->bindParam(':booked_date', $booked_date, PDO::PARAM_STR);  // 
 
     if ($stmt->execute()) {
         return $this->conn->lastInsertId();

@@ -1,5 +1,5 @@
 <?php
-#error_reporting(0);
+error_reporting(0);
 #ini_set('display_errors', 1);
 require_once('includes/header.php');
 require_once('classes/functions.php');
@@ -15,11 +15,25 @@ $insurancecopyParts = explode('/', $user['insurance_copy_path']);
 if (isset($insurancecopyParts[2])) {
    $copyName =  $insurancecopyParts[2]; // Output: insurance_68a345231de076.60706087.jpeg
 } 
-$journeyData = $obj->get_journey_details($customer_id);
+
+$from = $_REQUEST['pickup'];
+$to  = $_REQUEST['dropoff'];
+$carID = $_REQUEST['carbrandID'];
+$carTypeID  = $_REQUEST['carTypeID'];
+$car  = $_REQUEST['carName'];
+$carType  = $_REQUEST['brandtype'];
+$journeyType  = $_REQUEST['journey'];
+$startDate  = $_REQUEST['startDate'];
+$startTime  = $_REQUEST['startTime'];
+$fuelType  = $_REQUEST['fuelType'];
+ $seat        = '';
+$cars = $obj->get_my_carData($carID, $carType, $fuel, $seat);
+$pmtData = $obj->get_pmt_details($customer_id);
+/*$journeyData = $obj->get_journey_details($customer_id);
 
     $from = $_REQUEST['pickup'];
     $to = $_REQUEST['dropoff'];
-    $journeyType = $_POST['journey'] ?? '';
+    $journeyType = $_REQUEST['journey'] ?? '';
     $departDate = $_REQUEST['startDate'];
     $departTime = $_REQUEST['startTime'];
     $carID = $_REQUEST['carbrand'] ?? '';
@@ -29,7 +43,12 @@ $journeyData = $obj->get_journey_details($customer_id);
     $cars = $obj->get_my_carData($carID, $carType, $fuel, $seat);
     $cname = $obj->get_car_name($cars['car_id']);
     $pmtData = $obj->get_pmt_details($customer_id);
+    
 
+
+    if(isset($_REQUEST['btn_reg'])){
+      $journyDetails = $obj->add_user_journeyData($uid,$customer_id,$from,$to,$journeyType,$departDate,$departTime, $status, $booked_date);
+    }*/
 ?>
 <head>
   <meta charset="UTF-8">
@@ -95,16 +114,16 @@ $journeyData = $obj->get_journey_details($customer_id);
 
   <h5 class="card-title mt-4 mb-3 regTitle">Journey Details</h5>
     <div class="row mb-2">
-      <div class="col-md-6">Pickup: <span class="value_label"><?php echo $journeyData['from_location'];?></span></div>
-      <div class="col-md-6">Dropoff: <span class="value_label"><?php echo $journeyData['to_location'];?></span></div>
+      <div class="col-md-6">Pickup: <span class="value_label"><?php echo $from;?></span></div>
+      <div class="col-md-6">Dropoff: <span class="value_label"><?php echo $to;?></span></div>
     </div>
     <div class="row mb-2">
-      <div class="col-md-6">Journey Type: <span class="value_label"><?php echo $journeyData['journey_type'];?></span></div>
-      <div class="col-md-6">Start Date: <span class="value_label"><?php echo $journeyData['kickoff_date'];?></span></div>
+      <div class="col-md-6">Journey Type: <span class="value_label"><?php echo $journeyType;?></span></div>
+      <div class="col-md-6">Start Date: <span class="value_label"><?php echo $startDate;?></span></div>
     </div>
     <div class="row mb-2">
-      <div class="col-md-6">Start Time: <span class="value_label"><?php echo $journeyData['kickoff_time'];?></span></div>
-      <div class="col-md-6">Booking status: <span class="value_label"><?php  if($journeyData['booking_status'] ==1){ echo "Booked";};?></span></div>
+      <div class="col-md-6">Start Time: <span class="value_label"><?php echo $startTime;?></span></div>
+      <div class="col-md-6">Booking status: <span class="value_label"></span></div>
     </div>
     <!-- Row 3: Car Info -->
   
@@ -112,8 +131,8 @@ $journeyData = $obj->get_journey_details($customer_id);
     <!-- Row 4: Payment Info -->
   <h5 class="card-title mt-4 mb-3 regTitle">Car Specifications</h5>
     <div class="row mb-2">
-      <div class="col-md-6">Brand: <span class="value_label"><?php echo ($cname['car_company_name'] === 'Y') ? 'Yes' : 'No';?></span></div>
-      <div class="col-md-6">Type: <span class="value_label"><?php echo ($cars['car_type'] === 'Y') ? 'Yes' : 'No'; ?></span></div>
+      <div class="col-md-6">Brand: <span class="value_label"><?php echo $car;?></span></div>
+      <div class="col-md-6">Type: <span class="value_label"><?php echo $carType;?></span></div>
     </div>
     <div class="row mb-2">
       <div class="col-md-6">Fuel Type: <span class="value_label"><?php echo ($cars['fuel_type'] === 'Y') ? 'Yes' : 'No'; ?></span></div>
@@ -172,7 +191,16 @@ require_once('includes/footer.php');
  
     $('.btn_confRide').click(function(){
          
-      window.location.href = 'confirm.php';
+          window.location.href = 'confirm.php'+ 
+          '?pickup=' + encodeURIComponent('<?php echo $from ?>') +
+          '&dropoff=' + encodeURIComponent('<?php echo $to ?>') +
+          '&carbrandID=' + encodeURIComponent('<?php echo $carID ?>') +
+          '&carTypeID=' + encodeURIComponent('<?php echo $carTypeID ?>') +
+          '&carName=' + encodeURIComponent('<?php echo $car ?>') +
+          '&brandtype=' + encodeURIComponent('<?php echo $carType ?>') +
+          '&journey=' + encodeURIComponent('<?php echo $journeyType ?>') +
+          '&startDate=' + encodeURIComponent('<?php echo $startDate ?>') +
+          '&startTime=' + encodeURIComponent('<?php echo $startTime ?>') 
     })
   })
 </script>
